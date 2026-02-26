@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EWOGA – İngilizce Kelime Öğren</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Nunito:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0a0d16;
+    --card: #111623;
+    --accent: #ff4d00;
+    --accent2: #ffb300;
+    --text: #f0f2f8;
+    --muted: #7a8099;
+    --green: #00e67a;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Nunito', sans-serif;
+    overflow-x: hidden;
+  }
+
+  /* NOISE OVERLAY */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 999;
+    opacity: 0.4;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.2rem 2.5rem;
+    background: rgba(10,13,22,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(255,77,0,0.15);
+  }
+
+  .logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2rem;
+    letter-spacing: 3px;
+    color: var(--accent);
+    text-shadow: 0 0 20px rgba(255,77,0,0.5);
+  }
+
+  .nav-cta {
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    padding: 0.6rem 1.5rem;
+    border-radius: 50px;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 800;
+    font-size: 0.9rem;
+    cursor: pointer;
+    text-decoration: none;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 4px 20px rgba(255,77,0,0.35);
+  }
+  .nav-cta:hover { transform: scale(1.05); box-shadow: 0 6px 28px rgba(255,77,0,0.55); }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 8rem 2rem 4rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-glow {
+    position: absolute;
+    width: 700px; height: 700px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,77,0,0.18) 0%, transparent 70%);
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    animation: pulse 4s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { transform: translate(-50%,-50%) scale(1); opacity: 0.8; }
+    50% { transform: translate(-50%,-50%) scale(1.1); opacity: 1; }
+  }
+
+  .hero-badge {
+    display: inline-block;
+    background: rgba(255,77,0,0.15);
+    border: 1px solid rgba(255,77,0,0.4);
+    color: var(--accent);
+    font-size: 0.8rem;
+    font-weight: 800;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 0.4rem 1.2rem;
+    border-radius: 50px;
+    margin-bottom: 1.5rem;
+    animation: fadeUp 0.6s ease both;
+  }
+
+  .hero h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(4rem, 12vw, 9rem);
+    line-height: 0.95;
+    letter-spacing: 4px;
+    animation: fadeUp 0.7s 0.1s ease both;
+  }
+
+  .hero h1 span { color: var(--accent); }
+
+  .hero-sub {
+    font-size: clamp(1rem, 2.5vw, 1.3rem);
+    color: var(--muted);
+    max-width: 540px;
+    line-height: 1.6;
+    margin: 1.5rem auto 2.5rem;
+    animation: fadeUp 0.7s 0.2s ease both;
+    font-weight: 600;
+  }
+
+  .hero-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    animation: fadeUp 0.7s 0.3s ease both;
+  }
+
+  .btn-primary {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    background: var(--accent);
+    color: #fff;
+    padding: 1rem 2rem;
+    border-radius: 50px;
+    font-weight: 800;
+    font-size: 1rem;
+    text-decoration: none;
+    box-shadow: 0 8px 30px rgba(255,77,0,0.4);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 12px 40px rgba(255,77,0,0.6); }
+
+  .btn-secondary {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    background: transparent;
+    color: var(--text);
+    padding: 1rem 2rem;
+    border-radius: 50px;
+    font-weight: 800;
+    font-size: 1rem;
+    text-decoration: none;
+    border: 1.5px solid rgba(255,255,255,0.2);
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .btn-secondary:hover { border-color: var(--accent); background: rgba(255,77,0,0.07); }
+
+  .hero-stats {
+    display: flex;
+    gap: 3rem;
+    justify-content: center;
+    margin-top: 4rem;
+    flex-wrap: wrap;
+    animation: fadeUp 0.7s 0.4s ease both;
+  }
+
+  .stat { text-align: center; }
+  .stat-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2.8rem;
+    color: var(--accent);
+    line-height: 1;
+  }
+  .stat-label { color: var(--muted); font-size: 0.85rem; font-weight: 600; margin-top: 0.2rem; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* FLOATING WORDS */
+  .floating-words {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+
+  .fw {
+    position: absolute;
+    font-family: 'Bebas Neue', sans-serif;
+    color: rgba(255,77,0,0.06);
+    font-size: clamp(1.5rem, 4vw, 3rem);
+    letter-spacing: 2px;
+    animation: floatWord linear infinite;
+  }
+
+  @keyframes floatWord {
+    from { transform: translateY(110vh) rotate(-10deg); opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 1; }
+    to { transform: translateY(-10vh) rotate(10deg); opacity: 0; }
+  }
+
+  /* FEATURES */
+  .section {
+    padding: 6rem 2rem;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .section-label {
+    font-size: 0.8rem;
+    font-weight: 800;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.8rem;
+  }
+
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(2.5rem, 6vw, 4.5rem);
+    line-height: 1;
+    letter-spacing: 2px;
+    margin-bottom: 3.5rem;
+  }
+
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .feature-card {
+    background: var(--card);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 20px;
+    padding: 2rem;
+    transition: transform 0.3s, border-color 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .feature-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    transform: scaleX(0);
+    transition: transform 0.3s;
+    transform-origin: left;
+  }
+
+  .feature-card:hover { transform: translateY(-6px); border-color: rgba(255,77,0,0.3); }
+  .feature-card:hover::before { transform: scaleX(1); }
+
+  .feature-icon {
+    font-size: 2.2rem;
+    margin-bottom: 1rem;
+  }
+
+  .feature-card h3 {
+    font-size: 1.15rem;
+    font-weight: 800;
+    margin-bottom: 0.6rem;
+  }
+
+  .feature-card p { color: var(--muted); font-size: 0.92rem; line-height: 1.6; }
+
+  /* GAME MODES */
+  .modes-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 1rem;
+  }
+
+  .mode-chip {
+    background: var(--card);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 14px;
+    padding: 1.2rem 1rem;
+    text-align: center;
+    transition: background 0.2s, transform 0.2s;
+    cursor: default;
+  }
+
+  .mode-chip:hover { background: rgba(255,77,0,0.12); transform: scale(1.04); border-color: rgba(255,77,0,0.3); }
+  .mode-chip .icon { font-size: 1.8rem; display: block; margin-bottom: 0.5rem; }
+  .mode-chip span { font-size: 0.9rem; font-weight: 700; }
+
+  /* LEVELS */
+  .levels-row {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+
+  .level-badge {
+    padding: 0.5rem 1.2rem;
+    border-radius: 50px;
+    font-weight: 800;
+    font-size: 0.9rem;
+    border: 1.5px solid;
+  }
+
+  .level-a1 { color: #00e67a; border-color: #00e67a; background: rgba(0,230,122,0.08); }
+  .level-a2 { color: #4dd0e1; border-color: #4dd0e1; background: rgba(77,208,225,0.08); }
+  .level-b1 { color: #ffb300; border-color: #ffb300; background: rgba(255,179,0,0.08); }
+  .level-b2 { color: #ff7043; border-color: #ff7043; background: rgba(255,112,67,0.08); }
+  .level-c1 { color: #f06292; border-color: #f06292; background: rgba(240,98,146,0.08); }
+  .level-c2 { color: #ce93d8; border-color: #ce93d8; background: rgba(206,147,216,0.08); }
+
+  .levels-desc {
+    color: var(--muted);
+    margin-top: 1.5rem;
+    font-size: 0.95rem;
+    line-height: 1.7;
+    max-width: 600px;
+  }
+
+  /* CTA SECTION */
+  .cta-section {
+    text-align: center;
+    padding: 6rem 2rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cta-section::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at center, rgba(255,77,0,0.12) 0%, transparent 70%);
+  }
+
+  .cta-section h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(3rem, 8vw, 6rem);
+    letter-spacing: 3px;
+    margin-bottom: 1.5rem;
+    position: relative;
+  }
+
+  .cta-section p {
+    color: var(--muted);
+    font-size: 1.05rem;
+    margin-bottom: 2.5rem;
+    position: relative;
+  }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid rgba(255,255,255,0.06);
+    padding: 2.5rem;
+    text-align: center;
+    color: var(--muted);
+    font-size: 0.85rem;
+  }
+
+  footer a { color: var(--accent); text-decoration: none; }
+  footer a:hover { text-decoration: underline; }
+
+  /* MONSTER DIVIDER */
+  .monster-divider {
+    text-align: center;
+    font-size: 3rem;
+    padding: 1rem;
+    opacity: 0.15;
+    letter-spacing: 1rem;
+    user-select: none;
+  }
+
+  /* SCROLLBAR */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 10px; }
+
+  /* RESPONSIVE */
+  @media (max-width: 600px) {
+    nav { padding: 1rem 1.2rem; }
+    .hero-stats { gap: 2rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="logo">EWOGA</div>
+  <a href="https://play.google.com/store/apps/details?id=com.emreyoldas.ewoga" class="nav-cta" target="_blank">
+    ▶ İndir
+  </a>
+</nav>
+
+<!-- FLOATING WORDS -->
+<div class="floating-words" aria-hidden="true">
+  <span class="fw" style="left:5%;animation-duration:18s;animation-delay:0s;font-size:2rem">ADVENTURE</span>
+  <span class="fw" style="left:20%;animation-duration:22s;animation-delay:3s;font-size:1.5rem">MONSTER</span>
+  <span class="fw" style="left:40%;animation-duration:16s;animation-delay:6s;font-size:2.5rem">WORDS</span>
+  <span class="fw" style="left:60%;animation-duration:20s;animation-delay:1s;font-size:1.8rem">LEVEL</span>
+  <span class="fw" style="left:75%;animation-duration:25s;animation-delay:4s;font-size:2rem">ENGLISH</span>
+  <span class="fw" style="left:88%;animation-duration:19s;animation-delay:8s;font-size:1.4rem">CEFR</span>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-glow"></div>
+  <div class="hero-badge">🎮 Kelime Öğrenmenin Yeni Yolu</div>
+  <h1>KELIME<br><span>AVCISI</span></h1>
+  <p class="hero-sub">
+    Canavarları yen, seviyeleri geç, dünya sıralamalarına gir.<br>
+    İngilizce öğrenmek hiç bu kadar eğlenceli olmamıştı.
+  </p>
+  <div class="hero-buttons">
+    <a href="https://play.google.com/store/apps/details?id=com.emreyoldas.ewoga" class="btn-primary" target="_blank">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M3 20.5v-17c0-.83 1-.96 1.45-.43l15 8.5c.41.23.41.83 0 1.06l-15 8.5C3.99 21.46 3 21.33 3 20.5z"/></svg>
+      Google Play'den İndir
+    </a>
+    <a href="#features" class="btn-secondary">
+      Özellikleri Gör →
+    </a>
+  </div>
+  <div class="hero-stats">
+    <div class="stat">
+      <div class="stat-num">8+</div>
+      <div class="stat-label">Oyun Modu</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">A1–C2</div>
+      <div class="stat-label">CEFR Seviyeleri</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">1000s</div>
+      <div class="stat-label">Kelime</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">🌍</div>
+      <div class="stat-label">Global Liderlik</div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="section" id="features">
+  <div class="section-label">Neden EWOGA?</div>
+  <div class="section-title">ÖZELLIKLER</div>
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon">👹</div>
+      <h3>Canavar Macerası</h3>
+      <p>Her doğru cevap bir canavarı öldürür. Savaşarak öğren, ilerleyerek kazan.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🏆</div>
+      <h3>Global Liderlik Tablosu</h3>
+      <p>Dünyanın dört bir yanındaki oyuncularla yarış. En iyiler arasına gir.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📊</div>
+      <h3>İstatistik Takibi</h3>
+      <p>Her seviyedeki başarını gör, eksiklerini tespit et, gelişimini izle.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">⚡</div>
+      <h3>Hız Modu</h3>
+      <p>Süre baskısı altında kelimeleri yanıtla. Reflekslerini ve bilgini test et.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🔤</div>
+      <h3>Yazım Modu</h3>
+      <p>Kelimeleri sadece tanımakla kalma, doğru yazmayı da öğren.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🧠</div>
+      <h3>Hafıza Oyunu</h3>
+      <p>Eşleştirme oyunuyla kelimeleri uzun vadeli belleğine kazı.</p>
+    </div>
+  </div>
+</section>
+
+<div class="monster-divider" aria-hidden="true">👹 👾 💀 👺 👻</div>
+
+<!-- GAME MODES -->
+<section class="section">
+  <div class="section-label">Oyun Modları</div>
+  <div class="section-title">8 FARKLI<br>DENEYIM</div>
+  <div class="modes-grid">
+    <div class="mode-chip"><span class="icon">🎯</span><span>Normal</span></div>
+    <div class="mode-chip"><span class="icon">⚡</span><span>Hız</span></div>
+    <div class="mode-chip"><span class="icon">🔤</span><span>Yazım</span></div>
+    <div class="mode-chip"><span class="icon">🔍</span><span>Kelime Avı</span></div>
+    <div class="mode-chip"><span class="icon">🧠</span><span>Hafıza</span></div>
+    <div class="mode-chip"><span class="icon">👹</span><span>Canavar</span></div>
+    <div class="mode-chip"><span class="icon">🏆</span><span>Turnuva</span></div>
+    <div class="mode-chip"><span class="icon">📖</span><span>Keşif</span></div>
+  </div>
+</section>
+
+<!-- LEVELS -->
+<section class="section">
+  <div class="section-label">Tüm Seviyelere Uygun</div>
+  <div class="section-title">A1'DEN<br>C2'YE</div>
+  <div class="levels-row">
+    <span class="level-badge level-a1">A1 Başlangıç</span>
+    <span class="level-badge level-a2">A2 Temel</span>
+    <span class="level-badge level-b1">B1 Orta</span>
+    <span class="level-badge level-b2">B2 Orta-Üst</span>
+    <span class="level-badge level-c1">C1 İleri</span>
+    <span class="level-badge level-c2">C2 Uzman</span>
+  </div>
+  <p class="levels-desc">
+    CEFR standartlarına uygun binlerce kelime ile her seviyeden kullanıcıya özel içerik. 
+    Yeni başlayan mısın, yoksa İngilizceyi zaten biliyor ama geliştirmek mi istiyorsun? 
+    EWOGA her seviyede seninle.
+  </p>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <h2>HAZIR MISIN<br><span style="color:var(--accent)">CANAVAR?</span></h2>
+  <p>Ücretsiz indir. Kelime avına başla. Dünyayı geç.</p>
+  <a href="https://play.google.com/store/apps/details?id=com.emreyoldas.ewoga" class="btn-primary" style="display:inline-flex;font-size:1.1rem;padding:1.1rem 2.5rem" target="_blank">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M3 20.5v-17c0-.83 1-.96 1.45-.43l15 8.5c.41.23.41.83 0 1.06l-15 8.5C3.99 21.46 3 21.33 3 20.5z"/></svg>
+    Google Play'den Ücretsiz İndir
+  </a>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p style="margin-bottom:0.5rem">
+    <strong style="color:var(--text)">EWOGA</strong> — Yoldaş Inc. tarafından geliştirildi
+  </p>
+  <p>
+    <a href="https://doc-hosting.flycricket.io/ewoga-privacy-policy/21c867df-7973-4c6a-9112-9f72fa65643a/privacy" target="_blank">Gizlilik Politikası</a>
+    &nbsp;·&nbsp;
+    <a href="mailto:yoldasinc@gmail.com">İletişim</a>
+    &nbsp;·&nbsp;
+    <a href="https://play.google.com/store/apps/details?id=com.emreyoldas.ewoga" target="_blank">Google Play</a>
+  </p>
+  <p style="margin-top:0.8rem;opacity:0.4;font-size:0.78rem">© 2026 Yoldaş Inc. Tüm hakları saklıdır.</p>
+</footer>
+
+<script>
+  // Intersection Observer for scroll animations
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.style.opacity = '1';
+        entry.target.style.transform = 'translateY(0)';
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.feature-card, .mode-chip, .level-badge').forEach(el => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(20px)';
+    el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+    observer.observe(el);
+  });
+</script>
+
+</body>
+</html>
